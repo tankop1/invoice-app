@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spartan:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  
+  <title>Frontend Mentor | Invoice app</title>
+</head>
+<body>
+
+  <header>
+
+    <div class="logo-background">
+
+      <img src="assets/logo.svg" alt="logo" class="logo" />
+      <div></div>
+
+    </div>
+
+    <div class="header-bottom">
+
+      <div class="theme-container">
+
+        <button>
+          <img src="assets/icon-moon.svg" alt="moon" class="moon" />
+        </button>
+        
+      </div>
+
+      <div class="avatar-container">
+        <img src="assets/image-avatar.jpg" alt="avatar" class="avatar" />
+      </div>
+
+    </div>
+
+  </header>
+
+  <main>
+    <div class="main-middle">
+
+      <!-- INVOICES PAGE -->
+      <section class="main-top">
+
+        <div class="title-container">
+
+          <h1>Invoices</h1>
+          <p>There are 7 total invoices</p>
+
+        </div>
+
+        <div class="main-top-right">
+
+          <div class="filter">
+
+            <div class="filter-showing">
+
+              <p>Filter by status</p>
+              <img src="assets/icon-arrow-down.svg" alt="down-arrow" class="down-arrow" />
+
+            </div>
+
+            <div class="dropdown">
+
+              <label class="checkbox-container">
+                <input type="checkbox" class="draft-filter">
+                <span class="checkmark">
+                    <img src="assets/icon-check.svg" alt="check" />
+                </span>Draft
+              </label>
+
+              <label class="checkbox-container">
+                <input type="checkbox" class="pending-filter">
+                <span class="checkmark">
+                    <img src="assets/icon-check.svg" alt="check" />
+                </span>Pending
+              </label>
+
+              <label class="checkbox-container">
+                <input type="checkbox" class="paid-filter">
+                <span class="checkmark">
+                    <img src="assets/icon-check.svg" alt="check" />
+                </span>Paid
+              </label>
+
+            </div>
+
+          </div>
+
+          <button class="button-primary">
+
+            <img src="assets/icon-plus.svg" alt="plus" class="plus" />
+
+            <p>New Invoice</p>
+
+          </button>
+
+        </div>
+
+      </section>
+
+      <section class="invoices"></section>
+
+      <!-- INDIVIDUAL INVOICE INFO PAGE -->
+
+      <div class="confirm-delete">
+
+        <h1>Confirm Deletion</h1>
+
+        <p>Are you sure you want to delete invoice #? This action cannot be undone.</p>
+
+        <div class="confirm-delete-buttons">
+
+          <button class="cancel-delete">Cancel</button>
+          <button class="delete">Delete</button>
+
+        </div>
+
+      </div>
+
+      <div class="info-back">
+
+        <img src="assets/icon-arrow-left.svg" alt="arrow-left" class="arrow-left" />
+        <p>Go back</p>
+
+      </div>
+
+      <section class="info-top">
+
+        <div class="info-top-left"></div>
+
+        <div class="info-top-right">
+
+          <button class="edit-button">Edit</button>
+          <button class="delete-button">Delete</button>
+          <button class="paid-button">Mark as Paid</button>
+
+        </div>
+
+      </section>
+
+      <section class="info-main">
+
+        <div class="info-main-container">
+
+          <div class="info-main-top">
+
+            <div class="info-id">
+
+              <h2><span class="pound">#</span>XM9141</h2>
+              <p>Graphic Design</p>
+
+            </div>
+
+            <p class="info-address">19 Union Terrace<br>London<br>E1 3EZ<br>United Kingdom</p>
+
+          </div>
+
+          <div class="info-main-bottom">
+
+            <div class="info-main-left">
+
+              <div class="invoice-date">
+                <p>Invoice Date</p>
+                <b>21 Aug 2021</b>
+              </div>
+
+              <div class="payment-due">
+                <p>Payment Due</p>
+                <b>20 Sep 2021</b>
+              </div>
+
+            </div>
+
+            <div class="info-main-middle">
+
+              <div class="bill-to">
+                <p>Bill To</p>
+                <b>Alex Grim</b>
+              </div>
+
+              <div class="bill-to-address">
+                <p>84 Church Way<br>Bradford<br>BD1 9PB<br>United Kingdom</p>
+              </div>
+
+            </div>
+
+            <div class="info-main-right">
+
+              <p>Sent To</p>
+              <b>alexgrim@mail.com</b>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="info-main-money"></div>
+
+      </section>
+
+      <div class="bottom-space"></div>
+
+      <!-- EDIT INVOICE -->
+
+      <div class="shader">
+
+        <form class="edit-invoice">
+
+          <h1>New Invoice</h1>
+
+          <div class="bill-from form-container">
+
+            <h2>Bill From</h2>
+
+            <label for="from-street">Street Address</label>
+            <input type="text" id="from-street" />
+
+            <div class="from-address form-inner-container">
+
+              <div class="from-city">
+                <label for="from-city">City</label>
+                <input type="text" id="from-city" />
+              </div>
+
+              <div class="from-code">
+                <label for="from-code">Post Code</label>
+                <input type="text" id="from-code" />
+              </div>
+
+              <div class="from-country">
+                <label for="from-country">Country</label>
+                <input type="text" id="from-country" />
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="bill-to form-container">
+
+            <h2>Bill To</h2>
+
+            <label for="name">Client's Name</label>
+            <input type="text" id="name" />
+
+            <label for="email">Client's Email</label>
+            <input type="email" id="email" placeholder="e.g. email@example.com" />
+
+            <label for="to-street">Street Address</label>
+            <input type="text" id="to-street" />
+
+            <div class="to-address form-inner-container">
+
+              <div class="to-city">
+                <label for="to-city">City</label>
+                <input type="text" id="to-city" />
+              </div>
+
+              <div class="to-code">
+                <label for="to-code">Post Code</label>
+                <input type="text" id="to-code" />
+              </div>
+
+              <div class="to-country">
+                <label for="to-country">Country</label>
+                <input type="text" id="to-country" />
+              </div>
+
+            </div>
+
+            <div class="date-terms form-inner-container">
+
+              <div class="date">
+                <label for="date">Invoice Date</label>
+                <input type="date" id="date" />
+              </div>
+
+              <div class="terms">
+                <label for="terms">Payment Terms</label>
+
+                <select id="terms">
+                  <option value="Net 1 Day">Net 1 Day</option>
+                  <option value="Net 7 Days">Net 7 Days</option>
+                  <option value="Net 14 Days">Net 14 Days</option>
+                  <option value="Net 30 Days" selected>Net 30 Days</option>
+                </select>
+
+              </div>
+
+            </div>
+            
+            <label for="description">Project Description</label>
+            <input type="text" id="description" placeholder="e.g. Graphic Design Service" />
+
+          </div>
+
+          <div class="item-list form-container">
+
+            <h3>Item List</h3>
+
+            <div class="form-title-row">
+
+              <p class="form-item-name">Item Name</p>
+              <p class="form-quantity">Qty.</p>
+              <p class="form-price">Price</p>
+              <p class="form-total">Total</p>
+
+            </div>
+
+            <div class="form-rows"></div>
+
+            <button class="add-form-item">+ Add New Item</button>
+
+          </div>
+
+          <div class="form-bottom">
+
+            <button class="form-discard">Discard</button>
+
+            <div class="form-bottom-right">
+
+              <button class="save-draft">Save As Draft</button>
+              <button class="save-send">Save & Send</button>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
