@@ -15,13 +15,24 @@ function accessJSON() {
 }
 
 const addCommas = number => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    let numWithCommas = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    if (numWithCommas.includes('.')) {
+        let splitNum = numWithCommas.split('.');
+        if (splitNum[1].length == 1) {
+            numWithCommas += '0';
+        }
+    }
+
+    else {
+        numWithCommas += '.00';
+    }
+
+    return numWithCommas;
 }
 
 function loadInvoices(invoices) {
     if (invoices.length <= 0) {
         let newInvoices = noInvoices();
-        console.log(newInvoices);
         $('.invoices').html(newInvoices);
     }
 
@@ -231,7 +242,19 @@ const toPageTwo = e => {
             <div class="invoice-status ${chosenInvoice.status}-status">
               <div></div>
               <p>${chosenInvoice.status.charAt(0).toUpperCase() + chosenInvoice.status.slice(1)}</p>
-            </div>`)
+            </div>`);
+
+            if (chosenInvoice.status == 'draft') {
+                $('.paid-button').text('Send Invoice');
+            }
+
+            else if (chosenInvoice.status == 'paid') {
+                $('.paid-button').text('Mark as Unpaid');
+            }
+
+            else {
+                $('.paid-button').text('Mark as Paid');
+            }
             
             let rows = chosenInvoice.items.map(item => {
                 return `<div class="row">
@@ -239,9 +262,9 @@ const toPageTwo = e => {
                 <p class="row-item-1">${item.name}</p>
                 <p class="row-item-2">${item.quantity}</p>
                 <div>
-                  <p class="row-item-3">£ ${item.price}</p>
+                  <p class="row-item-3">£ ${addCommas(item.price)}</p>
                 </div>
-                <p class="row-item-4">£ ${item.total}</p>
+                <p class="row-item-4">£ ${addCommas(item.total)}</p>
     
               </div>`;
             });
@@ -259,7 +282,7 @@ const toPageTwo = e => {
 
           <div class="info-total">
             <p>Amount Due</p>
-            <b>£ ${chosenInvoice.total}</b>
+            <b>£ ${addCommas(chosenInvoice.total)}</b>
           </div>`);
         }
     }
@@ -312,12 +335,23 @@ $('.button-primary').click(() => {
 $('.shader').click(e => {
     if ($(e.target).attr('class') == 'shader') {
         $('.edit-invoice').css({'transform': 'translateX(-600px)'});
+        clearForm();
         setTimeout(() => {
             $('.confirm-delete').css({'display': 'none'});
             $('.shader').hide();
         }, 400);
     }
 });
+
+function findTotal(e) {
+    let itemQuantity = $(e.target).parent().children().toArray()[1];
+    let itemPrice = $(e.target).parent().children().toArray()[2];
+    let itemTotal = $(e.target).parent().children().toArray()[3];
+
+    let newTotal = parseFloat($(itemQuantity).val()) * parseFloat($(itemPrice).val());
+
+    newTotal ? $(itemTotal).text(newTotal) : $(itemTotal).text('0.00');
+}
 
 $('.add-form-item').click(e => {
     e.preventDefault();
@@ -332,6 +366,8 @@ $('.add-form-item').click(e => {
     <img src="assets/icon-delete.svg" alt="delete icon" class="row-delete" />
 
   </div>`);
+    $('.form-row-item-2').change(findTotal);
+    $('.form-row-item-3').change(findTotal);
 
     currentTheme == 'light' ? lightTheme() : darkTheme();
 
@@ -357,6 +393,24 @@ $('.save-send').click(e => {addInvoice(e, 'pending')});
 function addInvoice(event, status) {
     event.preventDefault();
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let clearBorder = ['#from-street', '#from-city', '#from-code', '#from-country', '#name', '#email', '#to-street', '#to-city', '#to-code', '#to-country', '#date', '#terms', '#description', '.add-form-item'];
+
+    // CLEARS ALL BORDERS
+    for (let i = 0; i < clearBorder.length; i++) {
+        $(clearBorder[i]).css({'border': '1px solid #DFE3FA'});
+    }
+
+    // RUN AUTHENTICATION
+    let blankItems = formAuth();
+
+    if (status == 'pending' && blankItems.length != 0) {
+
+        for (let i = 0; i < blankItems.length; i++) {
+            $(blankItems[i]).css({'border': '1px solid #EC5757'});
+        }
+
+        // ONLY RUNS IF STATUS IS PENDING AND FORM IS NOT COMPLETELY FILLED
+    }
 
     let id = `${characters[Math.floor(Math.random() * characters.length)]}${characters[Math.floor(Math.random() * characters.length)]}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}`
     let senderAddress = {
@@ -380,6 +434,25 @@ function addInvoice(event, status) {
     let paymentTerms = parseInt($('#terms').val());
     let description = $('#description').val();
 
+    let formRowItems = $('.form-rows').children().toArray();
+    let items = [];
+    for (let i = 0; i < formRowItems.length; i++) {
+        if ($(formRowItems[i]).css('display') != 'none') {
+            let rowInputs = $(formRowItems[i]).children().toArray();
+            items.push({
+                name: $(rowInputs[0]).val(),
+                quantity: $(rowInputs[1]).val(),
+                price: $(rowInputs[2]).val(),
+                total: $(rowInputs[3]).text(),
+            });
+        }
+    }
+
+    let finalTotal = 0;
+    for (let i = 0; i < items.length; i++) {
+        finalTotal += parseInt(items[i].total);
+    }
+
     invoices.unshift({
         id,
         createdAt: getCurrentDate(),
@@ -391,17 +464,34 @@ function addInvoice(event, status) {
         status,
         senderAddress,
         clientAddress,
-        items: [],
-        total: 0
+        items,
+        total: finalTotal
     });
 
-    $('.edit-invoice').css({'transform': 'translateX(-600px)'});
-    setTimeout(() => {
-        $('.shader').hide();
-    }, 400);
+    if (status != 'pending' || blankItems.length == 0) {
+        $('.edit-invoice').css({'transform': 'translateX(-600px)'});
+        setTimeout(() => {
+            $('.shader').hide();
+        }, 400);
 
-    loadInvoices(invoices);
-    clearForm();
+        loadInvoices(invoices);
+        clearForm();
+    }
+}
+
+// FORM AUTHENTICATION
+
+function formAuth() {
+    let formItemIds = ['#from-street', '#from-city', '#from-code', '#from-country', '#name', '#email', '#to-street', '#to-city', '#to-code', '#to-country', '#date', '#terms', '#description'];
+    let returnList = [];
+
+    for (let i = 0; i < formItemIds.length; i++) {
+        if (!$(formItemIds[i]).val()) {
+            returnList.push(formItemIds[i]);
+        }
+    }
+
+    return returnList;
 }
 
 // EDIT INVOICE
@@ -450,6 +540,30 @@ $('.edit-button').click(() => {
             $('#date').val(invoices[i].paymentDue);
             $('#terms').val(`Net ${invoices[i].paymentTerms} ${invoices[i].paymentTerms > 1 ? 'Days' : 'Day'}`);
             $('#description').val(invoices[i].description);
+
+            let currentItems = invoices[i].items;
+            for (let i = 0; i < currentItems.length; i++) {
+                let prevHTML = $('.form-rows').html();
+                $('.form-rows').html(prevHTML + `<div class="form-row-item">
+
+                <input type="text" class="form-row-item-1" value=${currentItems[i].name} />
+                <input type="number" class="form-row-item-2" value="${currentItems[i].quantity}" />
+                <input type="number" class="form-row-item-3" placeholder="0.00" value="${addCommas(currentItems[i].price)}" />
+                <p class="form-row-item-4">${addCommas(currentItems[i].total)}</p>
+                <img src="assets/icon-delete.svg" alt="delete icon" class="row-delete" />
+
+            </div>`);
+                $('.row-delete').click(e => {
+                    $(e.target).parent().css({'display': 'none'});
+                });
+
+                $('.form-row-item-2').change(findTotal);
+                $('.form-row-item-3').change(findTotal);
+
+                if (currentTheme == 'dark') {
+                    darkTheme();
+                }
+            }
         }
     }
 });
@@ -457,7 +571,6 @@ $('.edit-button').click(() => {
 function onEditSubmit(e) {
     e.preventDefault();
     let currentInvoiceId = $('.info-id h2').html().replace('<span class="pound">#</span>', ''); // GETS RID OF SPAN
-    console.log(currentInvoiceId);
 
     for (let i = 0; i < invoices.length; i++) {
         let senderAddress = {
@@ -481,6 +594,25 @@ function onEditSubmit(e) {
         let paymentTerms = parseInt($('#terms').val());
         let description = $('#description').val();
 
+        let formRowItems = $('.form-rows').children().toArray();
+        let items = [];
+        for (let i = 0; i < formRowItems.length; i++) {
+            if ($(formRowItems[i]).css('display') != 'none') {
+                let rowInputs = $(formRowItems[i]).children().toArray();
+                items.push({
+                    name: $(rowInputs[0]).val(),
+                    quantity: $(rowInputs[1]).val(),
+                    price: $(rowInputs[2]).val(),
+                    total: $(rowInputs[3]).text(),
+                });
+            }
+        }
+
+        let finalTotal = 0;
+        for (let i = 0; i < items.length; i++) {
+            finalTotal += parseInt(items[i].total);
+        }
+
         if (currentInvoiceId == invoices[i].id) {
             invoices[i] = {
                 id: currentInvoiceId,
@@ -493,8 +625,8 @@ function onEditSubmit(e) {
                 status: invoices[i].status,
                 senderAddress,
                 clientAddress,
-                items: invoices[i].items,
-                total: invoices[i].total
+                items,
+                total: finalTotal
             };
         }
 
@@ -523,6 +655,11 @@ function clearForm() {
     $('#date').val('');
     $('#terms').val('');
     $('#description').val('');
+
+    let formRowItems = $('.form-rows').children().toArray();
+    for (let i = 0; i < formRowItems.length; i++) {
+        $(formRowItems[i]).remove();
+    }
 }
 
 // DISCARD CHANGES
@@ -539,12 +676,25 @@ $('.form-discard').click(e => {
 
 // MARK AS PAID
 
-$('.paid-button').click(() => {
+$('.paid-button').click(e => {
     let currentInvoiceId = $('.info-id h2').html().replace('<span class="pound">#</span>', ''); // GETS RID OF SPAN
     for (let i = 0; i < invoices.length; i++) {
         if (currentInvoiceId == invoices[i].id) {
             if (invoices[i].status != '') {
-                invoices[i].status = 'paid';
+                if ($(e.target).text() == 'Send Invoice') {
+                    invoices[i].status = 'pending';
+                    $('.paid-button').text('Send Invoice');
+                }
+
+                else if ($(e.target).text() == 'Mark as Unpaid') {
+                    $('.paid-button').text('Mark as Paid');
+                    invoices[i].status = 'pending';
+                }
+
+                else {
+                    $('.paid-button').text('Mark as Unpaid');
+                    invoices[i].status = 'paid';
+                }
             }
         }
     }
@@ -577,3 +727,19 @@ $('.delete').click(() => {
     toPageOne();
     loadInvoices(invoices);
 });
+
+/* BUG LIST
+FIXED 1. Trash delete for row item doesn't work for edits until item is added
+2. Input values disapear when a row item is added
+FIXED 3. When in dark mode and editing an invoice, the item row inputs are white
+FIXED 4. Rows are not removed when form is cleared
+KEPT 5. Empty rows are still added when invoice form is submitted
+FIXED 6. Total calculations only work when money is rounded (floats don't work)
+7. Selecting multiple filters gives no results
+*/
+
+/* TODO LIST
+CANCELED 1. Change to pending status when all required form elements filled out
+2. Form authentication
+DONE 3. Allow user to change status from paid to pending (Change mark as paid button)
+*/
