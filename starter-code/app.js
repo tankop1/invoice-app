@@ -393,11 +393,12 @@ $('.save-send').click(e => {addInvoice(e, 'pending')});
 function addInvoice(event, status) {
     event.preventDefault();
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let clearBorder = ['#from-street', '#from-city', '#from-code', '#from-country', '#name', '#email', '#to-street', '#to-city', '#to-code', '#to-country', '#date', '#terms', '#description', '.add-form-item'];
+    let clearBorder = ['#from-street', '#from-city', '#from-code', '#from-country', '#name', '#email', '#to-street', '#to-city', '#to-code', '#to-country', '#date', '#terms', '#description'];
 
-    // CLEARS ALL BORDERS
+    // CLEARS ALL BORDERS AND COLORS
     for (let i = 0; i < clearBorder.length; i++) {
         $(clearBorder[i]).css({'border': '1px solid #DFE3FA'});
+        $(clearBorder[i] + '-label').css({'color': '#7E88C3'});
     }
 
     // RUN AUTHENTICATION
@@ -407,68 +408,69 @@ function addInvoice(event, status) {
 
         for (let i = 0; i < blankItems.length; i++) {
             $(blankItems[i]).css({'border': '1px solid #EC5757'});
+            $(blankItems[i] + '-label').css({'color': '#EC5757'});
         }
 
         // ONLY RUNS IF STATUS IS PENDING AND FORM IS NOT COMPLETELY FILLED
     }
 
-    let id = `${characters[Math.floor(Math.random() * characters.length)]}${characters[Math.floor(Math.random() * characters.length)]}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}`
-    let senderAddress = {
-        street: $('#from-street').val(),
-        city: $('#from-city').val(),
-        postCode: $('#from-code').val(),
-        country: $('#from-country').val()
-    };
+    else {
+        let id = `${characters[Math.floor(Math.random() * characters.length)]}${characters[Math.floor(Math.random() * characters.length)]}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)}`
+        let senderAddress = {
+            street: $('#from-street').val(),
+            city: $('#from-city').val(),
+            postCode: $('#from-code').val(),
+            country: $('#from-country').val()
+        };
 
-    let clientName = $('#name').val();
-    let clientEmail = $('#email').val()
+        let clientName = $('#name').val();
+        let clientEmail = $('#email').val()
 
-    let clientAddress = {
-        street: $('#to-street').val(),
-        city: $('#to-city').val(),
-        postCode: $('#to-code').val(),
-        country: $('#to-country').val()
-    };
+        let clientAddress = {
+            street: $('#to-street').val(),
+            city: $('#to-city').val(),
+            postCode: $('#to-code').val(),
+            country: $('#to-country').val()
+        };
 
-    let paymentDue = $('#date').val();
-    let paymentTerms = parseInt($('#terms').val());
-    let description = $('#description').val();
+        let paymentDue = $('#date').val();
+        let paymentTerms = parseInt($('#terms').val());
+        let description = $('#description').val();
 
-    let formRowItems = $('.form-rows').children().toArray();
-    let items = [];
-    for (let i = 0; i < formRowItems.length; i++) {
-        if ($(formRowItems[i]).css('display') != 'none') {
-            let rowInputs = $(formRowItems[i]).children().toArray();
-            items.push({
-                name: $(rowInputs[0]).val(),
-                quantity: $(rowInputs[1]).val(),
-                price: $(rowInputs[2]).val(),
-                total: $(rowInputs[3]).text(),
-            });
+        let formRowItems = $('.form-rows').children().toArray();
+        let items = [];
+        for (let i = 0; i < formRowItems.length; i++) {
+            if ($(formRowItems[i]).css('display') != 'none') {
+                let rowInputs = $(formRowItems[i]).children().toArray();
+                items.push({
+                    name: $(rowInputs[0]).val(),
+                    quantity: $(rowInputs[1]).val(),
+                    price: $(rowInputs[2]).val(),
+                    total: $(rowInputs[3]).text(),
+                });
+            }
         }
-    }
 
-    let finalTotal = 0;
-    for (let i = 0; i < items.length; i++) {
-        finalTotal += parseInt(items[i].total);
-    }
+        let finalTotal = 0;
+        for (let i = 0; i < items.length; i++) {
+            finalTotal += parseInt(items[i].total);
+        }
 
-    invoices.unshift({
-        id,
-        createdAt: getCurrentDate(),
-        paymentDue,
-        description,
-        paymentTerms,
-        clientName,
-        clientEmail,
-        status,
-        senderAddress,
-        clientAddress,
-        items,
-        total: finalTotal
-    });
+        invoices.unshift({
+            id,
+            createdAt: getCurrentDate(),
+            paymentDue,
+            description,
+            paymentTerms,
+            clientName,
+            clientEmail,
+            status,
+            senderAddress,
+            clientAddress,
+            items,
+            total: finalTotal
+        });
 
-    if (status != 'pending' || blankItems.length == 0) {
         $('.edit-invoice').css({'transform': 'translateX(-600px)'});
         setTimeout(() => {
             $('.shader').hide();
@@ -660,6 +662,14 @@ function clearForm() {
     for (let i = 0; i < formRowItems.length; i++) {
         $(formRowItems[i]).remove();
     }
+
+    // CLEARS ALL BORDERS AND COLORS FROM AUTHENTICATION
+    let clearBorder = ['#from-street', '#from-city', '#from-code', '#from-country', '#name', '#email', '#to-street', '#to-city', '#to-code', '#to-country', '#date', '#terms', '#description'];
+
+    for (let i = 0; i < clearBorder.length; i++) {
+        $(clearBorder[i]).css({'border': '1px solid #DFE3FA'});
+        $(clearBorder[i] + '-label').css({'color': '#7E88C3'});
+    }
 }
 
 // DISCARD CHANGES
@@ -736,10 +746,13 @@ FIXED 4. Rows are not removed when form is cleared
 KEPT 5. Empty rows are still added when invoice form is submitted
 FIXED 6. Total calculations only work when money is rounded (floats don't work)
 7. Selecting multiple filters gives no results
+FIXED 8. Deleting an invoice doesn't work until the second time
+FIXED 9. Invoice added on edit
+FIXED 10. Invoice added on add invoice form change
 */
 
 /* TODO LIST
-CANCELED 1. Change to pending status when all required form elements filled out
-2. Form authentication
+CANCELED (3 DONE INSTEAD) 1. Change to pending status when all required form elements filled out
+DONE 2. Form authentication - Clear on formClear()
 DONE 3. Allow user to change status from paid to pending (Change mark as paid button)
 */
