@@ -9,7 +9,7 @@ function accessJSON() {
     request.send();
     request.onload = function() {
         invoices = request.response;
-        invoices.length > 0 ? $('.title-container p').text(`There ${invoices.length != 1 ? 'are' : 'is'} ${invoices.length} total invoice${invoices.length != 1 ? 's' : ''}`) : $('.title-container p').text('No invoices');
+        invoices.length > 0 ? $('.title-container p').html(`<span class="remove-on-750">There ${invoices.length != 1 ? 'are' : 'is'} </span>${invoices.length} total invoice${invoices.length != 1 ? 's' : ''}`) : $('.title-container p').text('No invoices');
         loadInvoices(invoices);
     }
 }
@@ -57,7 +57,7 @@ function loadInvoices(invoices) {
               <p>${status}</p>
             </div>
     
-            <img src="assets/icon-arrow-right.svg" alt="arrow-right" class="arrow-right" />
+            <img src="assets/icon-arrow-right.svg" alt="arrow-right" class="arrow-right remove-on-750" />
     
           </article>`;
         });
@@ -113,12 +113,12 @@ function filterInvoices(invoices) {
     let filterNames = ['draft', 'pending', 'paid'];
     let filteredInvoices = invoices;
 
-    $('.title-container p').text(`There ${invoices.length != 1 ? 'are' : 'is'} ${invoices.length} total invoice${invoices.length != 1 ? 's' : ''}`);
+    $('.title-container p').html(`<span class="remove-on-750">There ${invoices.length != 1 ? 'are' : 'is'} </span>${invoices.length} total invoice${invoices.length != 1 ? 's' : ''}`);
 
     for (let i = 0; i < filters.length; i++) {
         if (filters[i]) {
             filteredInvoices = filteredInvoices.filter(obj => obj.status == filterNames[i]);
-            $('.title-container p').text(`There ${filteredInvoices.length > 1 ? 'are' : 'is'} ${filteredInvoices.length} ${filterNames[i]} invoice${filteredInvoices.length > 1 ? 's' : ''}`);
+            $('.title-container p').html(`<span class="remove-on-750">There ${filteredInvoices.length > 1 ? 'are' : 'is'} </span>${filteredInvoices.length} ${filterNames[i]} invoice${filteredInvoices.length > 1 ? 's' : ''}`);
         }
     }
 
@@ -397,7 +397,7 @@ function addInvoice(event, status) {
 
     // CLEARS ALL BORDERS AND COLORS
     for (let i = 0; i < clearBorder.length; i++) {
-        $(clearBorder[i]).css({'border': '1px solid #DFE3FA'});
+        currentTheme == 'dark' ? $(clearBorder[i]).css({'border': 'none'}) : $(clearBorder[i]).css({'border': '1px solid #DFE3FA'});
         $(clearBorder[i] + '-label').css({'color': '#7E88C3'});
     }
 
@@ -667,7 +667,7 @@ function clearForm() {
     let clearBorder = ['#from-street', '#from-city', '#from-code', '#from-country', '#name', '#email', '#to-street', '#to-city', '#to-code', '#to-country', '#date', '#terms', '#description'];
 
     for (let i = 0; i < clearBorder.length; i++) {
-        $(clearBorder[i]).css({'border': '1px solid #DFE3FA'});
+        currentTheme == 'dark' ? $(clearBorder[i]).css({'border': 'none'}) : $(clearBorder[i]).css({'border': '1px solid #DFE3FA'});
         $(clearBorder[i] + '-label').css({'color': '#7E88C3'});
     }
 }
@@ -749,6 +749,7 @@ FIXED 6. Total calculations only work when money is rounded (floats don't work)
 FIXED 8. Deleting an invoice doesn't work until the second time
 FIXED 9. Invoice added on edit
 FIXED 10. Invoice added on add invoice form change
+FIXED 11. Form authentication doesn't make text red in dark mode
 */
 
 /* TODO LIST

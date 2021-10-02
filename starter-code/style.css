@@ -118,6 +118,7 @@ main {
     display: flex;
     justify-content: center;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -165,6 +166,7 @@ main {
 
 .filter {
     position: relative;
+
 }
 
 .filter-showing {
@@ -1052,14 +1054,113 @@ main {
 }
 
 @media only screen and (max-width: 950px) {
-    .main-middle {
-        width: 750px;
+    .main-top {
+        transform: scale(0.8);
+    }
+
+    .invoices {
+        transform: scale(0.8);
+        margin-top: -35px;
     }
 }
 
 /* CHANGE TO MOBILE */
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 750px) {
     .main-middle {
-        width: 600px;
+        width: 85%;
+    }
+
+    .main-top {
+        transform: scale(1);
+        margin-top: -35px;
+    }
+
+    .invoices {
+        transform: scale(1);
+        margin-top: 35px;
+    }
+
+    .remove-on-750 {
+        display: none;
+    }
+
+    .main-top-right {
+        width: 225px;
+    }
+
+    .filter-showing {
+        width: 65px;
+    }
+
+    .button-primary {
+        width: 100px;
+    }
+
+    .button-primary-p {
+        margin-left: -5px;
+        margin-right: 5px;
+    }
+
+    .invoice {
+        position: relative;
+        height: 175px;
+        display: block;
+    }
+
+    .invoice h3 {
+        position: absolute;
+        margin-left: 0;
+        left: 35px;
+        top: 35px;
+    }
+
+    .invoice-date {
+        position: absolute;
+        left: 35px;
+        top: 90px;
+        width: max-content;
+    }
+
+    .invoice-name {
+        position: absolute;
+        right: 35px;
+        top: 35px;
+        width: max-content;
+    }
+
+    .invoice-amount {
+        position: absolute;
+        left: 35px;
+        top: 120px;  
+        width: max-content;      
+    }
+
+    .invoice-status {
+        margin-left: 0;
+        position: absolute;
+        right: 35px;
+        top: 100px; 
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .main-top-right {
+        width: 185px;
+    }
+
+    .title-container h1 {
+        font-size: 2rem;
+    }
+
+    .title-container p {
+        font-size: 0.85rem;
+    }
+
+    .button-primary {
+        transform: scale(0.9);
+    }
+
+    .filter {
+        transform: scale(0.9);
     }
 }
