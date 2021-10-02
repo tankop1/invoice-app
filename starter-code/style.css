@@ -1110,27 +1110,27 @@ main {
     .invoice h3 {
         position: absolute;
         margin-left: 0;
-        left: 35px;
-        top: 35px;
+        left: 25px;
+        top: 25px;
     }
 
     .invoice-date {
         position: absolute;
-        left: 35px;
+        left: 25px;
         top: 90px;
         width: max-content;
     }
 
     .invoice-name {
         position: absolute;
-        right: 35px;
-        top: 35px;
+        right: 25px;
+        top: 25px;
         width: max-content;
     }
 
     .invoice-amount {
         position: absolute;
-        left: 35px;
+        left: 25px;
         top: 120px;  
         width: max-content;      
     }
@@ -1138,14 +1138,19 @@ main {
     .invoice-status {
         margin-left: 0;
         position: absolute;
-        right: 35px;
+        right: 25px;
         top: 100px; 
     }
 }
 
 @media only screen and (max-width: 600px) {
     .main-top-right {
-        width: 185px;
+        width: 155px;
+    }
+
+    .title-container {
+        transform: scale(0.75);
+        margin-left: -15px;
     }
 
     .title-container h1 {
@@ -1157,10 +1162,10 @@ main {
     }
 
     .button-primary {
-        transform: scale(0.9);
+        transform: scale(0.75);
     }
 
     .filter {
-        transform: scale(0.9);
+        transform: scale(0.75);
     }
 }
