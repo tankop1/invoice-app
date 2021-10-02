@@ -260,7 +260,7 @@ const toPageTwo = e => {
                 return `<div class="row">
 
                 <p class="row-item-1">${item.name}</p>
-                <p class="row-item-2">${item.quantity}</p>
+                <p class="row-item-2">${item.quantity} <span class="show-on-750"> x </span></p>
                 <div>
                   <p class="row-item-3">£ ${addCommas(item.price)}</p>
                 </div>
@@ -269,7 +269,7 @@ const toPageTwo = e => {
               </div>`;
             });
 
-            $('.info-main-money').html(`<div class="title-row">
+            $('.info-main-money').html(`<div class="title-row remove-on-750">
 
             <p class="money-title money-item-name">Item Name</p>
             <p class="money-title money-quantity">QTY.</p>
