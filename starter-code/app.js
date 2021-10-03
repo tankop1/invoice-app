@@ -327,6 +327,14 @@ $('.button-primary').click(() => {
         setTimeout(() => {
             $('.shader').hide();
         }, 400);
+
+        if ($(window).width() < 750) {
+            $('.info-top-right').css({'display': 'flex'});
+        }
+
+        else {
+            $('.info-top-right').css({'display': 'block'});
+        }
     });
 
     $('.form-bottom-right').css({'width': '52%'});
@@ -520,6 +528,14 @@ $('.edit-button').click(() => {
         setTimeout(() => {
             $('.shader').hide();
         }, 400);
+
+        if ($(window).width() < 750) {
+            $('.info-top-right').css({'display': 'flex'});
+        }
+
+        else {
+            $('.info-top-right').css({'display': 'block'});
+        }
     });
 
     $('.form-bottom-right').css({'width': '45%'});
@@ -568,11 +584,23 @@ $('.edit-button').click(() => {
             }
         }
     }
+
+    if ($(window).width() < 750) {
+        $('.info-top-right').css({'display': 'none'});
+    }
 });
 
 function onEditSubmit(e) {
     e.preventDefault();
     let currentInvoiceId = $('.info-id h2').html().replace('<span class="pound">#</span>', ''); // GETS RID OF SPAN
+
+    if ($(window).width() < 750) {
+        $('.info-top-right').css({'display': 'flex'});
+    }
+
+    else {
+        $('.info-top-right').css({'display': 'block'});
+    }
 
     for (let i = 0; i < invoices.length; i++) {
         let senderAddress = {
@@ -682,6 +710,14 @@ $('.form-discard').click(e => {
     setTimeout(() => {
         $('.shader').hide();
     }, 400);
+
+    if ($(window).width() < 750) {
+        $('.info-top-right').css({'display': 'flex'});
+    }
+
+    else {
+        $('.info-top-right').css({'display': 'block'});
+    }
 });
 
 // MARK AS PAID
