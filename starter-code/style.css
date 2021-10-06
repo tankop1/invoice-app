@@ -166,6 +166,7 @@ main {
 
 .filter {
     position: relative;
+    z-index: 2;
 }
 
 .filter-showing {
