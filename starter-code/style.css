@@ -166,7 +166,7 @@ main {
 
 .filter {
     position: relative;
-
+    z-index: 20;
 }
 
 .filter-showing {
@@ -227,6 +227,7 @@ main {
     box-shadow: 0px 5px 10px rgb(228, 228, 228);
     display: none;
     flex-direction: column;
+    z-index: 20;
 }
 
 .checkbox-container {
@@ -1060,7 +1061,8 @@ main {
 
 @media only screen and (max-width: 950px) {
     .main-top {
-        transform: scale(0.8);
+        width: 80%;
+        margin: 0 auto;
     }
 
     .invoices {
@@ -1076,7 +1078,7 @@ main {
     }
 
     .main-top {
-        transform: scale(1);
+        width: 100%;
         margin-top: -35px;
     }
 
@@ -1196,7 +1198,11 @@ main {
 
 @media only screen and (max-width: 600px) {
     .form-bottom {
-        padding: 25px 55px;
+        padding: 25px 25px;
+    }
+
+    .form-bottom-right {
+        margin-right: 15px;
     }
     /* CANT GET WIDTH OF FORM BOTTOM RIGHT CONTAINER TO CHANGE */
 }

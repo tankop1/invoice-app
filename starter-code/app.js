@@ -167,6 +167,14 @@ const darkTheme = () => {
     $('.add-form-item').css({'background-color': '#252945'});
 
     $('.confirm-delete').css({'background-color': '#1E2139'});
+
+    if ($(window).width() < 750) {
+        $('.info-top-right').css({'background-color': '#1E2139', 'box-shadow': 'none'});
+    }
+
+    else {
+        $('.info-top-right').css({'background-color': 'none', 'box-shadow': 'none'});
+    }
 }
 
 const lightTheme = () => {
@@ -190,6 +198,14 @@ const lightTheme = () => {
     $('.add-form-item').css({'background-color': '#F9FAFE'});
 
     $('.confirm-delete').css({'background-color': 'white'});
+
+    if ($(window).width() < 750) {
+        $('.info-top-right').css({'background-color': 'white', 'box-shadow': '0px -15px 200px rgb(230, 230, 230)'});
+    }
+
+    else {
+        $('.info-top-right').css({'background-color': 'none', 'box-shadow': 'none'});
+    }
 }
 
 // CHANGE PAGE
