@@ -722,7 +722,7 @@ main {
 
 .edit-invoice {
     position: fixed;
-    left: 90px;
+    left: 0px;
     top: 0;
     overflow-x: hidden;
     overflow-y: scroll;
